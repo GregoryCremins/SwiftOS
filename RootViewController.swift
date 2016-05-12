@@ -8,6 +8,7 @@
 
 import Cocoa
 
+
 class RootViewController: NSViewController {
 
     @IBOutlet weak var HostLogOutput: NSScrollView!
@@ -29,6 +30,7 @@ class RootViewController: NSViewController {
     @IBOutlet var PCBView: NSTextView!
     
     @IBOutlet weak var ProgramInput: NSTextField!
+    @IBOutlet weak var BSODImage: NSImageView!
     
     var CPUClock = NSTimer()
     override func viewDidLoad() {
@@ -45,7 +47,7 @@ class RootViewController: NSViewController {
        
         memoryView.setDelegate(self);
         memoryView.setDataSource(self);
-        
+        //self.BSOD();
         super.viewDidLoad()
         // Do view setup here.
     }
@@ -134,6 +136,25 @@ class RootViewController: NSViewController {
     func getProgramInputView() ->NSTextField
     {
         return ProgramInput;
+    }
+    
+    func BSOD()
+    {
+        self.BSODImage.image = NSImage(named:"guile");
+        self.BSODImage.hidden = false;
+        self.StartButton.hidden = true;
+        HaltButton.hidden = true;
+        ResetButton.hidden = true;
+        StepButton.hidden = true;
+        //UserInputField.hidden = true;
+        UserOutputField.hidden = true;
+        StatusBarField.hidden = true;
+        PCBView.hidden = true;
+        CPUField.hidden = true;
+        ReadyQueueView.hidden = true;
+        HostLogOutput.hidden = true;
+        ProgramInput.hidden = true;
+        memoryView.hidden = true;
     }
     
   

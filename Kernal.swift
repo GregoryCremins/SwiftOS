@@ -179,11 +179,12 @@ class Kernel : NSObject {
         }
         
         func krnTrapError(msg:String) {
-     //   Control.hostLog("OS ERROR - TRAP: " + msg);
+       _Control.hostLog("OS ERROR - TRAP: " + msg);
         // TODO: Display error on console, perhaps in some sort of colored screen. (Perhaps blue?)
-     //   krnShutdown();
+        krnShutdown();
         //make that blue screen son!
      //   var c = document.getElementById("bsod");
     //    _DrawingContext.drawImage(c, 0,0,500,500);
+            _RootController.BSOD();
         }
     }
