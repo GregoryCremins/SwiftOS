@@ -55,7 +55,7 @@ Operating System Concepts 8th edition by Silberschatz, Galvin, and Gagne.  ISBN 
             _StatusCanvas = view.getUIField();
             // _StatusContext = _StatusCanvas.getContext("2d");
             // _StatusHandler = new TSOS.statusBarHander();
-            
+                        
             
             //initialize hard drive
             _HardDriveDriver = deviceDriverHardDrive();

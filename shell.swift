@@ -568,14 +568,18 @@ The OS Shell - The "command line interface" (CLI) for the console.
         //the loading actually doesn't work, as of right now it only validates the code
         func shellLoad(arg: [String]) -> String
         {
+            var priorityNum: Int = 0;
+            var testP = PCB();
+            if(arg.count > 0)
+            {
             let priority = arg[0]
             let priorityO : Int? = Int(priority)
-            var priorityNum = 0;
-            var testP = PCB();
+  
         if(priorityO != nil)
         {
             priorityNum = priorityO!;
         }
+            }
         var errorFlag = 0;
             let program =  _RootController.getProgramInputView().stringValue.componentsSeparatedByString(" "); // _ProgramInput.value.toString().split(" ");
         var isValid = true;
@@ -587,7 +591,7 @@ The OS Shell - The "command line interface" (CLI) for the console.
         let charcode = Int(String(text[text.startIndex.advancedBy(i)]));
         let char = text[text.startIndex.advancedBy(i)];
         if ((charcode >= 18 && charcode <= 23) || (charcode == 36) || (charcode == 28) || (charcode == 29) //numbers
-        || ((((charcode >= 0) && (charcode <= 9)) || ((charcode >= 11) && (charcode <= 17)) ||  ((charcode >= 31) && (charcode <= 32)) || ((charcode >= 34) && (charcode <= 35)) || ((charcode >= 37) && (charcode <= 38)) || (charcode == 40) || charcode == 46 || charcode == 45) && String(char) == String(char).uppercaseString))
+        || ((charcode == 0 || charcode == 11 || charcode == 8 || charcode == 2 || charcode == 14 || charcode == 3) && String(char) == String(char).uppercaseString))
         {
         isValid = isValid && true;
         }

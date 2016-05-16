@@ -22,15 +22,21 @@ class RootViewController: NSViewController {
     @IBOutlet weak var CPUField: NSTextField!
     @IBOutlet weak var memoryView: NSTableView!
     var isShifted = false;
-    @IBOutlet weak var UserInputField: NSTextField!
+    @IBOutlet weak var UserInputField: UITextFieldController!
     @IBOutlet var UserOutputField: NSTextView!
     @IBOutlet var StatusBarField: NSTextView!
     
+
+    //@IBOutlet weak var UIField: UserInputViewController!
+    //@IBOutlet weak var OverallWindow: NSWindow!
     @IBOutlet var ReadyQueueView: NSTextView!
     @IBOutlet var PCBView: NSTextView!
     
     @IBOutlet weak var ProgramInput: NSTextField!
     @IBOutlet weak var BSODImage: NSImageView!
+    var editUIField = false;
+    var mouseX = CGFloat(0);
+    var mouseY = CGFloat(0);
     
     var CPUClock = NSTimer()
     override func viewDidLoad() {
@@ -43,8 +49,13 @@ class RootViewController: NSViewController {
             self.flagsChanged(theEvent)
             return theEvent
         }
+    
         
-       
+        
+        
+        
+        
+        
         memoryView.setDelegate(self);
         memoryView.setDataSource(self);
         //self.BSOD();
@@ -52,12 +63,17 @@ class RootViewController: NSViewController {
         // Do view setup here.
     }
     
+
+ 
+    
+    
     override func keyDown(theEvent:NSEvent) {
        // UserInputField.stringValue = "key = " + (theEvent.charactersIgnoringModifiers
        //     ?? "")
         //UserInputField.stringValue += "\ncharacter = " + (theEvent.characters ?? "")
        // UserInputField.stringValue += "\nmodifier = " + theEvent.modifierFlags.rawValue.description
-        if(_OSStarted)
+      //  let bufferCheck = self.getUIField().stringValue == oldBuffer;
+        if(_OSStarted && editUIField)
         {
         let targetString = String(theEvent.keyCode)
         //let targetString = String(theEvent.characters).utf8
@@ -65,9 +81,10 @@ class RootViewController: NSViewController {
             _Console.handleInput();
             isShifted = false;
          //   print(targetString);
+           // oldBuffer = self.getUIField().stringValue;
         }
-        
     }
+    
     
     
     override func flagsChanged(theEvent: NSEvent) {
@@ -79,7 +96,7 @@ class RootViewController: NSViewController {
     }
     override func awakeFromNib() {
        // print("View controller instance with view: \(self.view)")
-        UserInputField.stringValue = ">";
+        //UserInputField.stringValue = ">";
         //HostLogOutputText.string = "HASDOOO";
         //HostLogOutput.setAccessibilityEdited(false);
          _Control = Control();
@@ -314,4 +331,5 @@ extension RootViewController : NSTableViewDelegate {
         return nil
     }
 }
+
 
