@@ -155,7 +155,7 @@ The OS Shell - The "command line interface" (CLI) for the console.
         {
         _StdIn.stringValue = ">";
         _Kernel.krnTrace("Shell Command~" + buffer);
-        print(buffer);
+       // print(buffer);
         //
         // Parse the input...
         //
@@ -568,6 +568,7 @@ The OS Shell - The "command line interface" (CLI) for the console.
         //the loading actually doesn't work, as of right now it only validates the code
         func shellLoad(arg: [String]) -> String
         {
+            
             var priorityNum: Int = 0;
             var testP = PCB();
             if(arg.count > 0)
@@ -588,10 +589,11 @@ The OS Shell - The "command line interface" (CLI) for the console.
         for(var j = 0; j < program.count; j++) {
         let text = program[j];
         for (var i = 0; i < text.characters.count; i++) {
-        let charcode = Int(String(text[text.startIndex.advancedBy(i)]));
-        let char = text[text.startIndex.advancedBy(i)];
-        if ((charcode >= 18 && charcode <= 23) || (charcode == 36) || (charcode == 28) || (charcode == 29) //numbers
-        || ((charcode == 0 || charcode == 11 || charcode == 8 || charcode == 2 || charcode == 14 || charcode == 3) && String(char) == String(char).uppercaseString))
+            let char = text.substringWithRange(Range<String.Index>(start: text.startIndex.advancedBy(i),end: text.startIndex.advancedBy(i).successor()));
+            let charcode = char.unicodeScalars[char.unicodeScalars.startIndex];
+        //print(String(char) + ": " + String(charcode));
+        if ((charcode >= UnicodeScalar(48) && charcode <= UnicodeScalar(57)) //|| (charcode == 36) || (charcode == 28) || (charcode == 29) //numbers
+        || ((charcode == UnicodeScalar(65) || charcode == UnicodeScalar(66) || charcode == UnicodeScalar(67) || charcode == UnicodeScalar(68) || charcode == UnicodeScalar(69) || charcode == UnicodeScalar(70)) && String(char) == String(char).uppercaseString))
         {
         isValid = isValid && true;
         }
@@ -644,6 +646,8 @@ The OS Shell - The "command line interface" (CLI) for the console.
         _MemoryHandler.load(program[h], index: h + offset);
 //       _CPUElement.focus();
 //        _Canvas.focus();
+         //   print("HERE" + program[h]);
+            
 //        
         }
         _MemoryHandler.updateMem();
@@ -697,7 +701,11 @@ The OS Shell - The "command line interface" (CLI) for the console.
         }
         func shellRun(args: [String]) ->String
         {
-           let pid = Int(args[0])!
+            var pid = 0;
+            if(args.count > 0)
+            {
+            pid = Int(args[0])!
+            }
         if(_Processes.count >= pid)
         {
         if(_CPU.isExecuting)
@@ -851,7 +859,7 @@ The OS Shell - The "command line interface" (CLI) for the console.
         func shellRunAll(args:[String]) -> String
         {
         _StdOut.string = "\r\n" + _StdOut.string!;
-        for i  in 0 ... _Processes.count
+        for i  in 0 ... _Processes.count - 1
         {
         _ReadyQueue.enqueue(_Processes[i]);
         }

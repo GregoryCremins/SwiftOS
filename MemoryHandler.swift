@@ -25,6 +25,7 @@ import Cocoa
         //loads an item into memory
         func load(mem: String, index : Int)
         {
+         //   print("original string:" + mem);
         //alert(mem);
       //  if(typeof(mem) == typeof(123))
      //   {
@@ -60,7 +61,7 @@ import Cocoa
         {
             var first = 0;
             let memInt = Int(mem)!
-            
+           // print ("At load point" + String(memInt));
             if(memInt > 16)
             {
                 first = Int(floor(Double(memInt / 16)));
@@ -82,6 +83,7 @@ import Cocoa
             _Memory[index] = mem;
             self.updateMem();
             }
+            //print("IN MEMORY: " + _Memory[index]);
         }
         /**
         * Function to convert the given hex digit to a string
@@ -161,6 +163,9 @@ import Cocoa
      //   }
       //  var targetCell2 = <HTMLTableCellElement> curRow.insertCell();
         _DisplayedMem[i] = "" + _Memory[i + offset];
+            _RootController.updateTable();
+           //print( _RootController.getMemoryView().dataSource()!);
+           // print("In Memory Display: " + String(i + offset) + ": " + _DisplayedMem[i]);
         
         }
         

@@ -25,6 +25,7 @@ class RootViewController: NSViewController {
     @IBOutlet weak var UserInputField: UITextFieldController!
     @IBOutlet var UserOutputField: NSTextView!
     @IBOutlet var StatusBarField: NSTextView!
+    var buffer = "";
     
 
     //@IBOutlet weak var UIField: UserInputViewController!
@@ -80,8 +81,11 @@ class RootViewController: NSViewController {
         _krnKeyboardDriver.krnKbdDispatchKeyPress([targetString,String(isShifted).lowercaseString]);
             _Console.handleInput();
             isShifted = false;
-         //   print(targetString);
-           // oldBuffer = self.getUIField().stringValue;
+            buffer = "";
+        }
+        else
+        {
+            buffer = String(theEvent.keyCode);
         }
     }
     
@@ -225,9 +229,14 @@ extension RootViewController : NSTableViewDataSource {
     }
 }
 extension RootViewController : NSTableViewDelegate {
+    
+    func updateTable()
+    {
+        self.memoryView.reloadData();
+    }
     func tableView(tableView: NSTableView, viewForTableColumn tableColumn: NSTableColumn?, row: Int) -> NSView? {
         
-        //print("DOING IT");
+        //print("DOING IT" + String(CACurrentMediaTime()));
         var text:String = ""
         var cellIdentifier: String = ""
         

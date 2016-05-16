@@ -11,7 +11,6 @@ import Cocoa
 
 class UITextFieldController: NSTextField
 {
-    var isShifted = false;
     override init(frame frameRect: NSRect) {
         super.init(frame: frameRect);
         self.stringValue = "AHSD";
@@ -25,11 +24,13 @@ class UITextFieldController: NSTextField
     override func textDidBeginEditing(notification: NSNotification) {
         super.textDidBeginEditing(notification);
         _RootController.editUIField = true;
+        _krnKeyboardDriver.krnKbdDispatchKeyPress([_RootController.buffer,String(_RootController.isShifted).lowercaseString]);
+        _Console.handleInput();
+        _RootController.isShifted = false;
     }
     
     override func textDidEndEditing(notification: NSNotification) {
         super.textDidEndEditing(notification);
         _RootController.editUIField = false;
     }
-
-}
+    }

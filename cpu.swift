@@ -111,6 +111,7 @@ Operating System Concepts 8th edition by Silberschatz, Galvin, and Gagne.  ISBN 
         _Kernel.krnTrace("CPU cycle");
         // TODO: Accumulate CPU usage and profiling statistics here.
         // Do the real work here. Be sure to set this.isExecuting appropriately.
+          //  print("AT CYCLE: " + _MemoryHandler.read(self.PC));
         self.handleCommand(_MemoryHandler.read(self.PC));
             self.runningCycleCount = self.runningCycleCount + 1;
         }
@@ -160,6 +161,7 @@ Operating System Concepts 8th edition by Silberschatz, Galvin, and Gagne.  ISBN 
         * @param command the command written in 2 digit hex
         */
         func handleCommand(command:String) {
+         //   print("COMMAND READ:" + command);
         // alert(command);
         switch (command) {
         case "A9":
