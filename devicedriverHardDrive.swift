@@ -31,6 +31,10 @@ class deviceDriverHardDrive : DeviceDriver
             func startHardDrive() -> String
             {
                 _HardDrive.HarddriveStartup();
+//                for entry in _localStorage
+//                {
+//                    print(entry.0 + ": " + entry.1);
+//                }
                 return "";
             }
             func formatHardDrive()
@@ -50,10 +54,12 @@ class deviceDriverHardDrive : DeviceDriver
                                 target = target + String(b);
                                // var target = "" + t + "" + s + "" + b;
                                 _HardDrive.setValue(target, value: "0")
+                                
                             }
                         }
                         
                     }
+
                     //_StdOut.putText("Successfully formatted disk");
                     _StdOut.string = "Successfully formatted disk" + _StdOut.string!;
                 }
@@ -90,6 +96,7 @@ class deviceDriverHardDrive : DeviceDriver
                     }
                     
                 }
+                
 
                 if(target == false)
                 {
@@ -100,6 +107,8 @@ class deviceDriverHardDrive : DeviceDriver
                 {
                      _StdOut.string = "File created in memory" + _StdOut.string!;
                     return targetLoc;
+                    
+                    
                    // _StdOut.putText("File created in memory.");
                     
                 }
@@ -107,7 +116,7 @@ class deviceDriverHardDrive : DeviceDriver
             }
             
             //write to file
-                func writeToFile(fileName :String, data:String)
+                func writeToFile(fileName :String, var data:String)
             {
                 //first find the index of the file in the page table
                 var pageLoc = "000";
@@ -179,7 +188,8 @@ class deviceDriverHardDrive : DeviceDriver
                         //first get starting location
                         let startLoc = Int("0" + targetLoc)! - Int(numBlocks);
                         //save the location of the first page of data to the page table
-                        _HardDrive.setValue(pageLoc, value: String(_HardDrive.getValue(pageLoc) + String(startLoc, radix:8)));
+                        //print("Page: " + pageLoc + " : " + "Value: " + String(startLoc));
+                        _HardDrive.setValue(pageLoc, value: String(_HardDrive.getValue(pageLoc) + String(startLoc)));
                         var currentLoc = String(startLoc);
                         while(currentLoc.characters.count < 3)
                         {
@@ -190,10 +200,10 @@ class deviceDriverHardDrive : DeviceDriver
                         var counter = 0;
                         _HardDrive.setValue(currentLoc, value: "1")
                         while (data.characters.count > 0) {
-                            let temp = Array(arrayLiteral:data)[0];
+                            let temp = String(data.substringWithRange(Range<String.Index>(start: data.startIndex, end: data.startIndex.successor())));
                             _HardDrive.setValue(currentLoc, value: _HardDrive.getValue(currentLoc) + temp);
-                          //  let index1 = data.startIndex.advancedBy(1);
-                           // var data = data.substringFromIndex(index1);
+                            let index1 = data.startIndex.advancedBy(1);
+                            data = data.substringFromIndex(index1);
                             counter++;
                             //then if we need to swap blocks. we do so
                             if (counter % 60 == 0)
@@ -206,14 +216,14 @@ class deviceDriverHardDrive : DeviceDriver
                                 {
                                     nextLocString = "0" + nextLocString;
                                 }
-                                _HardDrive.setValue(currentLoc, value: "1" + _HardDrive.getValue(currentLoc).substringFromIndex(_HardDrive.getValue(currentLoc).startIndex.predecessor()) + nextLocString);
+                                _HardDrive.setValue(currentLoc, value: "1" + _HardDrive.getValue(currentLoc).substringFromIndex(_HardDrive.getValue(currentLoc).startIndex.successor()) + nextLocString);
                                 //then go to the next block
                                 currentLoc = nextLocString;
                             }
                         }
                        // _StdOut.putText("Data successfully written to hard drive");
                         _StdOut.string = ("Data successfully writtern to hard drive") + _StdOut.string!;
-                         _StdOut.string = ("\r\n") + _StdOut.string!;
+                                                _StdOut.string = ("\r\n") + _StdOut.string!;
                        // _StdOut.advanceLine();
                     }
                         //if we did not find a large enough space to put the data, throw error
@@ -270,13 +280,17 @@ class deviceDriverHardDrive : DeviceDriver
                     {
                         var dataLoc = Int(("0" + dataLocString),radix: 8)!;
                         var currentData = _HardDrive.getValue(String(dataLoc, radix:8));
-                        let startInd = currentData.startIndex.predecessor();
-                        let endInd = currentData.startIndex.advancedBy(61);
+                        let startInd = currentData.startIndex.successor();
+                        var endInd = currentData.endIndex;
+                        if(currentData.characters.count == 64)
+                        {
+                        endInd = currentData.startIndex.advancedBy(61);
+                        }
                         var outString = currentData.substringWithRange(Range<String.Index>(start: startInd, end: endInd));
                         while (currentData.characters.count == 64 && dataLoc < 255) {
                             currentData = _HardDrive.getValue(String(dataLoc, radix:8));
                             dataLoc += 1;
-                            let startInd1 = currentData.startIndex.predecessor();
+                            let startInd1 = currentData.startIndex.successor();
                             let endInd1 = currentData.startIndex.advancedBy(61);
                             outString = outString + currentData.substringWithRange(Range<String.Index>(start: startInd1, end: endInd1))
                         }
@@ -308,7 +322,7 @@ class deviceDriverHardDrive : DeviceDriver
                 while(pageLoc != "077" && foundFile == false)
                 {
                     //if we found it, stop looping
-                    if(Array(arrayLiteral: _HardDrive.getValue(pageLoc))[0] == 1 && _HardDrive.getValue(pageLoc).indexOf(filename) > -1)
+                    if(String(_HardDrive.getValue(pageLoc).substringWithRange(Range<String.Index>(start: _HardDrive.getValue(pageLoc).startIndex, end: _HardDrive.getValue(pageLoc).startIndex.successor()))) == "1" && _HardDrive.getValue(pageLoc).indexOf(filename) > -1)
                     {
                         foundFile = true;
                     }
@@ -327,21 +341,38 @@ class deviceDriverHardDrive : DeviceDriver
                 //if we found it, we need to remove it
                 if(foundFile)
                 {
+                    var dataLocString = ""
                     let page = _HardDrive.getValue(pageLoc);
-                    let index4 = page.startIndex.advancedBy(page.characters.count - 3)
-                    let dataLocString = page.substringFromIndex(index4);
-                    if(dataLocString == "" && Int(dataLocString)! < Int("0277", radix: 8))
+                    if(page.characters.count > 4)
                     {
+                    let index4 = page.startIndex.advancedBy(page.characters.count - 3)
+                    dataLocString = page.substringFromIndex(index4);
+                    }
+
+                    if(dataLocString != "" && Int("0" + dataLocString, radix: 8)! < Int("0277", radix: 8)!)
+                    {
+                        print("here");
                         var dataLoc = Int("0" + dataLocString, radix: 8)!;
                         //reset the page table block
                         _HardDrive.setValue(pageLoc, value: "0");
+                        //reset data
                         var currentData = _HardDrive.getValue(String(dataLoc, radix:8));
+                        //if no extra pages then just clean this one
+                        if(currentData.characters.count > 1 && currentData.characters.count < 64)
+                        {
+                            _HardDrive.setValue(String(dataLoc, radix:8), value: "0");
+                        }
                         while (currentData.characters.count == 64 && dataLoc < 255) {
                             currentData = _HardDrive.getValue(String(dataLoc, radix:8));
                             _HardDrive.setValue(String(dataLoc, radix:8), value: "0");
                             dataLoc += 1;
                         }
+                        for entry in _localStorage
+                                    {
+                                        print(entry.0 + ": " + entry.1);
+                                    }
                         return true;
+                        
                     }
 
                 }
@@ -366,11 +397,11 @@ class deviceDriverHardDrive : DeviceDriver
               //  _StdOut.putText("Hard drive:")
                 while(pageLoc != "077" && endFile == false)
                 {
-                    if(Array(arrayLiteral: _HardDrive.getValue(pageLoc))[0] == 1)
+                    if(String(_HardDrive.getValue(pageLoc)).substringWithRange(Range<String.Index>(start: _HardDrive.getValue(pageLoc).startIndex, end: _HardDrive.getValue(pageLoc).startIndex.advancedBy(1))) == "1")
                     {
                 //        _StdOut.advanceLine();
                         _StdOut.string = "\r\n" + _StdOut.string!;
-                        _StdOut.string = _HardDrive.getValue(pageLoc).substringFromIndex(_HardDrive.getValue(pageLoc).startIndex.predecessor()) + _StdOut.string!;
+                        _StdOut.string = _HardDrive.getValue(pageLoc).substringFromIndex(_HardDrive.getValue(pageLoc).startIndex.successor()) + _StdOut.string!;
                 //        _StdOut.putText(_HardDrive.getValue(pageLoc).substring(1));
                         var location = Int("0" + pageLoc, radix: 8);
                         location = location! + 1;
@@ -391,7 +422,22 @@ class deviceDriverHardDrive : DeviceDriver
 
 
 extension String {
-    func indexOf(string: String) -> Int {
-        return rangeOfString(string, options: .LiteralSearch, range: nil, locale: nil)?.startIndex.distanceTo(startIndex) ?? 0
+    func indexOf(string: String) -> Int
+    {
+        var startIndex = self.startIndex;
+        var num = 0;
+        
+        while(startIndex != string.endIndex)
+        {
+            if(string.substringWithRange(Range<String.Index>(start: startIndex, end: startIndex.advancedBy(string.characters.count))) == string)
+            {
+                return num;
+            }
+            num+=1;
+            startIndex = startIndex.predecessor();
+        }
+        return -1;
     }
 }
+
+

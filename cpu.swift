@@ -161,7 +161,7 @@ Operating System Concepts 8th edition by Silberschatz, Galvin, and Gagne.  ISBN 
         * @param command the command written in 2 digit hex
         */
         func handleCommand(command:String) {
-         //   print("COMMAND READ:" + command);
+            print("COMMAND READ:" + command);
         // alert(command);
         switch (command) {
         case "A9":
@@ -201,15 +201,17 @@ Operating System Concepts 8th edition by Silberschatz, Galvin, and Gagne.  ISBN 
         break;
         }
         case "8D":
-        
         //store to memory
-            let memLoc = (self.base) +  Int(_MemoryHandler.read(self.PC + 2) + _MemoryHandler.read(self.PC + 1), radix: 16)!;
+            let memLoc = (self.base) +  Int((_MemoryHandler.read(self.PC + 2) + _MemoryHandler.read(self.PC + 1)), radix: 16)!;
+            print("memory location: " + String(memLoc));
+            print("Combination of: " + String(self.PC + 1) + " : " + _MemoryHandler.read(self.PC + 1));
+            print("And : " + String(self.PC + 2) + " : " + _MemoryHandler.read(self.PC + 2));
         if (self.checkbounds(memLoc)) {
-        if (self.Acc < 16) {
+        if (self.Acc < 9) {
         _MemoryHandler.load(String("0" + String(self.Acc)), index: memLoc);
         }
         else {
-            _MemoryHandler.load(String(self.Acc), index: memLoc);
+            _MemoryHandler.load(self.Acc, index: memLoc);
         }
         self.PC += 3;
         _MemoryHandler.updateMem();
@@ -258,10 +260,12 @@ Operating System Concepts 8th edition by Silberschatz, Galvin, and Gagne.  ISBN 
         break;
         
         case "A2":
-        
+         //   print("PC: " + String(self.PC))
+       // print("Memory: " + _MemoryHandler.read(self.PC + 1))
+          //  print(Int("00" + _MemoryHandler.read(self.PC + 1), radix: 16)!)
         //alert("Xregister loaded with: " + parseInt("0x" + (_MemoryHandler.read(this.PC + 1))));
         //load constant into x register
-            self.Xreg = Int("0x" + (_MemoryHandler.read(self.PC + 1)) ,radix:16)!;
+            self.Xreg = Int("00" + (_MemoryHandler.read(self.PC + 1)) ,radix:16)!;
         self.PC = self.PC + 2;
         _MemoryHandler.updateMem();
         break;
@@ -270,7 +274,7 @@ Operating System Concepts 8th edition by Silberschatz, Galvin, and Gagne.  ISBN 
         
         //load x register from memory
         let oldPC = self.PC;
-            self.PC = (self.base) + Int("0x" + _MemoryHandler.read(self.PC + 2) + _MemoryHandler.read(self.PC + 1),radix:16)!;
+            self.PC = (self.base) + Int("00" + _MemoryHandler.read(self.PC + 2) + _MemoryHandler.read(self.PC + 1),radix:16)!;
         if (self.checkbounds(self.PC)) {
             self.Xreg = Int(_Memory[self.PC], radix:16)!;
         self.PC = oldPC + 3;
@@ -441,10 +445,13 @@ Operating System Concepts 8th edition by Silberschatz, Galvin, and Gagne.  ISBN 
         self.PC = self.base +  Int(_MemoryHandler.read(self.PC + 2) + _MemoryHandler.read(self.PC + 1), radix:16)!;
         if (self.checkbounds(self.PC)) {
             var temp = Int(_MemoryHandler.read(self.PC), radix:16)!;
+        //    print(String(self.PC) + ": " + String(temp));
         temp = temp + 1;
         if(temp < 256)
         {
-        _MemoryHandler.load(String(temp), index: self.PC);
+          //  print(temp);
+         //   print(String(temp));
+        _MemoryHandler.load(temp, index: self.PC);
         _MemoryHandler.updateMem();
         self.PC = oldPC + 3;
         }
@@ -487,15 +494,18 @@ Operating System Concepts 8th edition by Silberschatz, Galvin, and Gagne.  ISBN 
             _StdOut.string = "\r\n" + _StdOut.string!;
         //print the yreg to the screen
         var i = self.base;
+        var outString = ""
         while (_MemoryHandler.read(self.Yreg + i) != "00" && i < self.limit) {
         //alert("Target = " + (this.Yreg + i));
         //alert(_MemoryHandler.read(this.Yreg + i));
             let charCode = Int(_MemoryHandler.read(self.Yreg + i),radix:16)!;
             let char = String(UnicodeScalar(charCode));
         //_StdOut.putText(char);
-            _StdOut.string = char + _StdOut.string!;
+            outString = outString + char;
+            
         i++;
         }
+            _StdOut.string = outString + _StdOut.string!;
         }
         if (self.Xreg == 1) {
         //_StdOut.advanceLine();

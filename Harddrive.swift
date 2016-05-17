@@ -12,11 +12,11 @@ class HardDrive{
     
     func HarddriveStartup()
     {
-        for t in 1...3
+        for t in 0...3
         {
-            for s in 1...8
+            for s in 0...8
             {
-                for b in 1...8
+                for b in 0...8
                 {
                     var memString = ""
                     memString += String(t)
@@ -46,7 +46,7 @@ class HardDrive{
         {
             return returnVal;
         }
-        return "null";
+        return "0";
     }
     
 }

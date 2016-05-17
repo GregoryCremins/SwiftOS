@@ -57,33 +57,57 @@ import Cocoa
       //  }
         
             //integer case
-        if let _ = Int(mem)
-        {
-            var first = 0;
-            let memInt = Int(mem)!
-           // print ("At load point" + String(memInt));
-            if(memInt > 16)
-            {
-                first = Int(floor(Double(memInt / 16)));
-            }
-            else
-            {
-                first = 0;
-            }
-            let second = (memInt % 16);
-            let firstChar = self.ConvertToString(first);
-            let secondChar = self.ConvertToString(second);
-            _Memory[index] = firstChar + secondChar;
-            self.updateMem();
-            
-        }
+//        if let _ = Int(mem)
+//        {
+//            var first = 0;
+//            let memInt = Int(mem)!
+//           // print ("At load point" + String(memInt));
+//            if(memInt > 16)
+//            {
+//                first = Int(floor(Double(memInt / 16)));
+//            }
+//            else
+//            {
+//                first = 0;
+//            }
+//            let second = (memInt % 16);
+//            let firstChar = self.ConvertToString(first);
+//            let secondChar = self.ConvertToString(second);
+//            _Memory[index] = firstChar + secondChar;
+//            self.updateMem();
+//            
+//        }
             //string case
-        else
-        {
+//        else
+//        {
             _Memory[index] = mem;
             self.updateMem();
-            }
+          //  }
             //print("IN MEMORY: " + _Memory[index]);
+        }
+        
+        func load(mem: Int, index:Int)
+        {
+           
+                var first = 0;
+                let memInt = Int(mem)
+                // print ("At load point" + String(memInt));
+                if(memInt > 16)
+                {
+                    first = Int(floor(Double(memInt / 16)));
+                }
+                else
+                {
+                    first = 0;
+                }
+                let second = (memInt % 16);
+                let firstChar = self.ConvertToString(first);
+                let secondChar = self.ConvertToString(second);
+                _Memory[index] = firstChar + secondChar;
+                self.updateMem();
+                
+            
+
         }
         /**
         * Function to convert the given hex digit to a string
@@ -170,26 +194,48 @@ import Cocoa
         }
         
         _CPU.updateUI();
+            _RootController.getPCBView().string = "";
      //   while(_PCBElement.rows.length > 1)
    //     {
      //   _PCBElement.deleteRow(_PCBElement.rows.length - 1);
      //   }
-     //   if (_Processes.length > 0) {
-     //   for (var j = 0; j < _Processes.length; j++) {
-     //   _CPUElement.value += "\n";
-     //   _Processes[j].printToScreen();
-      //  }
-     //   }
+        if (_Processes.count > 0) {
+        for (var j = 0; j < _Processes.count; j++) {
+       // _CPUElement.value += "\n";
+        _Processes[j].printToScreen();
+        }
+        }
         
     //    var readyQueueTable = <HTMLTableElement> document.getElementById("readyqueue");
     //    while (readyQueueTable.rows.length > 1)
     //    {
     //    readyQueueTable.deleteRow(readyQueueTable.rows.length - 1);
      //   }
-     //   var resultQueue2 = new TSOS.Queue();
-     //   while (_ReadyQueue.getSize() > 0) {
-     //   var testProcess = _ReadyQueue.dequeue();
-     //   resultQueue2.enqueue(testProcess);
+        let readyQueueElement = _RootController.getReadyQueueView();
+        let resultQueue2 = Queue(q2: [PCB]());
+        while (_ReadyQueue.getSize() > 0) {
+        let testProcess = _ReadyQueue.dequeue()!;
+        resultQueue2.enqueue(testProcess);
+            
+            let pidStr = "Process #: " + String(testProcess.PID);
+            let pcStr = "PC: " + String(testProcess.PC);
+            let accStr = "Acc: " + String(testProcess.Acc);
+            let xregStr = "Xreg: " + String(testProcess.Xreg);
+            let yregStr = "Yreg: " + String(testProcess.Yreg);
+            let zflagStr = "ZFlag: " + String(testProcess.Zflag);
+            let baseStr = "Base Reg: " + String(testProcess.base);
+            let priorityStr = "Priority: " + String(testProcess.priority);
+            let tsbStr = "TSB: " + testProcess.hardDriveLoc;
+            readyQueueElement.string = readyQueueElement.string! + pidStr + " ";
+            readyQueueElement.string = readyQueueElement.string! + pcStr + " ";
+            readyQueueElement.string = readyQueueElement.string! + accStr + " ";
+            readyQueueElement.string = readyQueueElement.string! + xregStr + " ";
+            readyQueueElement.string = readyQueueElement.string! + yregStr + " ";
+            readyQueueElement.string = readyQueueElement.string! + zflagStr + " ";
+            readyQueueElement.string = readyQueueElement.string! + baseStr + " " ;
+            readyQueueElement.string = readyQueueElement.string! + priorityStr + " "
+            readyQueueElement.string = readyQueueElement.string! + tsbStr;
+            readyQueueElement.string = readyQueueElement.string! + "\r\n";
      //   var row = <HTMLTableRowElement> readyQueueTable.insertRow();
      //   for (var j = 0; j <10; j++) {
      //   var targetCell = row.insertCell(j);
@@ -252,8 +298,8 @@ import Cocoa
       //  }
       //
       //  }
-      //  _ReadyQueue = resultQueue2;
-          //  }
+        _ReadyQueue = resultQueue2;
+            }
         }
         
         

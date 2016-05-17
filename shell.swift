@@ -701,7 +701,7 @@ The OS Shell - The "command line interface" (CLI) for the console.
         }
         func shellRun(args: [String]) ->String
         {
-            var pid = 0;
+            var pid = 1;
             if(args.count > 0)
             {
             pid = Int(args[0])!
