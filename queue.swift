@@ -71,7 +71,7 @@ Look at the push and shift methods, as they are the least obvious here.
         var temp = [PCB]();
         while(q.count > 0)
         {
-            var target = dequeue()!;
+            let target = dequeue()!;
         temp.append(target);
         }
         
@@ -81,20 +81,20 @@ Look at the push and shift methods, as they are the least obvious here.
         {
         var maxIndex = -1;
         var maxVal = -1;
-        for j in 0 ... temp.count
+        for j in 0 ... temp.count - 1
         {
-       if(temp[j].getPriority() > maxVal)
-        {
-       maxIndex = j;
-        maxVal = temp[j].getPriority();
+            if(temp[j].getPriority() > maxVal)
+            {
+            maxIndex = j;
+            maxVal = temp[j].getPriority();
+            }
         }
-        }
-       // q.append(temp[j])
+            //q.append(temp[j])
         //temp.removeAtIndex(j);
             self.enqueue(temp[maxIndex])
             //temp.splice(maxIndex, 1);
        // temp.insert(, atIndex: maxIndex)
             temp.removeAtIndex(maxIndex);
-        }
-        }
     }
+}
+}

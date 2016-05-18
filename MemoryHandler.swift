@@ -164,11 +164,8 @@ import Cocoa
         * Function to update memory on the UI
         */
         func updateMem() {
+           // print("CP1");
         _CPUElement.stringValue = "";
-        //    let rows = NSIndexSet(indexesInRange: NSRange(location: 0,length: _MemoryElement2.numberOfRows));
-      
-          //  _MemoryElement2.removeRowsAtIndexes(rows, withAnimation: NSTableViewAnimationOptions.EffectNone);
-         //   _MemoryElement2.reloadData();
         var offset = 256 * (_currentProcess - 1);
         if (offset < 0) {
         offset = 0;
@@ -177,42 +174,30 @@ import Cocoa
         {
         offset = _Processes[_currentProcess - 1].base;
         }
-       //var curRow = 0;
        for (var i = 0; i < 256; i++)
         {
-      //  if ((i % 16) == 0) {
-     //   curRow = <HTMLTableRowElement> _MemoryElement2.insertRow();
-      //  var indexCell = <HTMLTableCellElement> curRow.insertCell();
-      //  indexCell.innerHTML = "0x" + (i + offset).toString(16);
-     //   }
-      //  var targetCell2 = <HTMLTableCellElement> curRow.insertCell();
         _DisplayedMem[i] = "" + _Memory[i + offset];
-            _RootController.updateTable();
+            _RootController.offSet = _currentProcess - 1;
+            //_RootController.updateTable();
            //print( _RootController.getMemoryView().dataSource()!);
            // print("In Memory Display: " + String(i + offset) + ": " + _DisplayedMem[i]);
         
         }
-        
-        _CPU.updateUI();
+            _RootController.updateTable();
+          //  print("CP2");
+            _CPU.updateUI();
+          //  print("CP3");
             _RootController.getPCBView().string = "";
-     //   while(_PCBElement.rows.length > 1)
-   //     {
-     //   _PCBElement.deleteRow(_PCBElement.rows.length - 1);
-     //   }
         if (_Processes.count > 0) {
         for (var j = 0; j < _Processes.count; j++) {
-       // _CPUElement.value += "\n";
         _Processes[j].printToScreen();
         }
+         //   print("CP4");
         }
         
-    //    var readyQueueTable = <HTMLTableElement> document.getElementById("readyqueue");
-    //    while (readyQueueTable.rows.length > 1)
-    //    {
-    //    readyQueueTable.deleteRow(readyQueueTable.rows.length - 1);
-     //   }
         let readyQueueElement = _RootController.getReadyQueueView();
         let resultQueue2 = Queue(q2: [PCB]());
+        readyQueueElement.string = "";
         while (_ReadyQueue.getSize() > 0) {
         let testProcess = _ReadyQueue.dequeue()!;
         resultQueue2.enqueue(testProcess);
@@ -236,70 +221,10 @@ import Cocoa
             readyQueueElement.string = readyQueueElement.string! + priorityStr + " "
             readyQueueElement.string = readyQueueElement.string! + tsbStr;
             readyQueueElement.string = readyQueueElement.string! + "\r\n";
-     //   var row = <HTMLTableRowElement> readyQueueTable.insertRow();
-     //   for (var j = 0; j <10; j++) {
-     //   var targetCell = row.insertCell(j);
-     //   switch (j) {
-     //   case 0:
-     //   {
-     //   targetCell.innerHTML = "" + testProcess.PID;
-     //   break;
-      //  }
-      //  case 1:
-      //  {
-      //  targetCell.innerHTML = "0x" + testProcess.toHexDigit(testProcess.PC);
-      //  break;
-    //    }
-     //   case 2:
-    //    {
-    //    targetCell.innerHTML = "0x" + testProcess.toHexDigit(testProcess.Acc);
-     //   break;
-     //   }
-    //    case 3:
-   //     {
-   //     targetCell.innerHTML = "0x" + testProcess.toHexDigit(testProcess.Xreg);
-   //     break;
-   //     }
-   //     case 4:
-    //    {
-    //    targetCell.innerHTML = "0x" + testProcess.toHexDigit(testProcess.Yreg);
-    //    break;
-    //    }
-     //   case 5:
-      //  {
-      //  targetCell.innerHTML = "0x" + testProcess.toHexDigit(testProcess.Zflag);
-       // break;
-      //  }
-      //  case 6:
-      //  {
-       // targetCell.innerHTML = "0x" + testProcess.toHexDigit(testProcess.base);
-       // break;
-      //  }
-      //  case 7:
-      //  {
-      //  targetCell.innerHTML = "0x" + testProcess.toHexDigit(testProcess.limit);
-      //  break;
-      //  }
-      //  case 8:
-      //  {
-      //  targetCell.innerHTML = "" + testProcess.getPriority();
-      //  break;
-      //  }
-      //  case 9:
-      //  {
-      //  targetCell.innerHTML = testProcess.getHardDriveLoc();
-      //  break;
-      //  }
-      //  default:
-       // {
-       // break;
-      //  }
-      //  }
-      //  }
-      //
-      //  }
-        _ReadyQueue = resultQueue2;
+            
             }
+            _ReadyQueue = resultQueue2;
+            //print("DONE WITH MEM UPDATE");
         }
         
         

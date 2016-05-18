@@ -80,6 +80,7 @@ Operating System Concepts 8th edition by Silberschatz, Galvin, and Gagne.  ISBN 
         }
         else {
         //alert("CONTEXTSWAP");
+            print("contextswap");
         _Kernel.krnTrace("Context Swap from " + String(_currentProcess));
         //alert(_currentProcess);
         //alert("CONTEXT SWAPPIN ACTION");
@@ -89,12 +90,14 @@ Operating System Concepts 8th edition by Silberschatz, Galvin, and Gagne.  ISBN 
         }
         else {
         if (_currentProcess == 0 && _ReadyQueue.getSize() == 0) {
+         //   print("Completed all execution");
         _Kernel.krnTrace("Completed all execution");
         self.isExecuting = false;
         }
         else {
         if (_currentProcess == 0 && _ReadyQueue.getSize() != 0) {
         _Kernel.krnTrace("Completed Program " + String(_currentProcess));
+          //  print("READY QUEUE SIZE: " + String(_ReadyQueue.getSize()));
         let process = _ReadyQueue.dequeue()!;
         if(process.getHardDriveLoc() != "N/A")
         {
@@ -104,6 +107,7 @@ Operating System Concepts 8th edition by Silberschatz, Galvin, and Gagne.  ISBN 
         process.loadToCPU();
         }
         _currentProcess = process.PID;
+          //  print("Loading program: " + String(process.PID));
         _Kernel.krnTrace("Loading Program " + String(_currentProcess));
         self.runningCycleCount = 0;
         }
@@ -161,13 +165,12 @@ Operating System Concepts 8th edition by Silberschatz, Galvin, and Gagne.  ISBN 
         * @param command the command written in 2 digit hex
         */
         func handleCommand(command:String) {
-            print("COMMAND READ:" + command);
+         //   print("COMMAND READ:" + command);
         // alert(command);
         switch (command) {
         case "A9":
-        
         //load a constant
-            self.Acc = Int(_MemoryHandler.read(self.PC + 1), radix:16)!;
+        self.Acc = Int(_MemoryHandler.read(self.PC + 1), radix:16)!;
         self.PC = self.PC + 2;
         _MemoryHandler.updateMem();
         break;
@@ -203,9 +206,9 @@ Operating System Concepts 8th edition by Silberschatz, Galvin, and Gagne.  ISBN 
         case "8D":
         //store to memory
             let memLoc = (self.base) +  Int((_MemoryHandler.read(self.PC + 2) + _MemoryHandler.read(self.PC + 1)), radix: 16)!;
-            print("memory location: " + String(memLoc));
-            print("Combination of: " + String(self.PC + 1) + " : " + _MemoryHandler.read(self.PC + 1));
-            print("And : " + String(self.PC + 2) + " : " + _MemoryHandler.read(self.PC + 2));
+          //  print("memory location: " + String(memLoc));
+        //    print("Combination of: " + String(self.PC + 1) + " : " + _MemoryHandler.read(self.PC + 1));
+          //  print("And : " + String(self.PC + 2) + " : " + _MemoryHandler.read(self.PC + 2));
         if (self.checkbounds(memLoc)) {
         if (self.Acc < 9) {
         _MemoryHandler.load(String("0" + String(self.Acc)), index: memLoc);
@@ -339,7 +342,7 @@ Operating System Concepts 8th edition by Silberschatz, Galvin, and Gagne.  ISBN 
         case "00":
         
         //Break
-        self.isExecuting = false;
+        //self.isExecuting = false;
         _CPU.storeToPCB(_currentProcess);
         _MemoryHandler.updateMem();
         //document.getElementById("btnStep").disabled = true;
@@ -486,10 +489,10 @@ Operating System Concepts 8th edition by Silberschatz, Galvin, and Gagne.  ISBN 
         
         
         case "FF":
-        
+        //print("INXREG")
         //System Call, check the Xreg
         if (self.Xreg == 2) {
-        
+           // print("IN XREG == 2");
         //_StdOut.advanceLine();
             _StdOut.string = "\r\n" + _StdOut.string!;
         //print the yreg to the screen
@@ -505,6 +508,8 @@ Operating System Concepts 8th edition by Silberschatz, Galvin, and Gagne.  ISBN 
             
         i++;
         }
+            //print("PID: " + String(_currentProcess));
+           // print("PRINTING: " + outString);
             _StdOut.string = outString + _StdOut.string!;
         }
         if (self.Xreg == 1) {

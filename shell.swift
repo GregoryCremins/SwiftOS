@@ -858,6 +858,8 @@ The OS Shell - The "command line interface" (CLI) for the console.
         //run all programs
         func shellRunAll(args:[String]) -> String
         {
+        if(_Processes.count > 0)
+        {
         _StdOut.string = "\r\n" + _StdOut.string!;
         for i  in 0 ... _Processes.count - 1
         {
@@ -869,10 +871,17 @@ The OS Shell - The "command line interface" (CLI) for the console.
         }
         _CPU.isExecuting = true;
         _currentProcess = 0;
+          //  print("Queue size: " + String(_ReadyQueue.getSize()));
         //alert(_currentProcess);
         //_StdOut.putText("Running all processes");
         _StdOut.string = "Running all processes" + _StdOut.string!;
         return "Running all processes";
+        }
+            else
+        {
+            _StdOut.string = "There are no processes to run" + _StdOut.string!;
+            }
+            return "";
         }
         
         //show running proesses
@@ -903,6 +912,7 @@ _StdOut.string = "Process " + String(pros.PID) + " is running but waiting on the
 
        //_StdOut.putText("There are no running processes.");
         }
+            
             return "derp";
         }
         //create a file in memory

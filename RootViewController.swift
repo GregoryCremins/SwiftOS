@@ -26,6 +26,7 @@ class RootViewController: NSViewController {
     @IBOutlet var UserOutputField: NSTextView!
     @IBOutlet var StatusBarField: NSTextView!
     var buffer = "";
+    var offSet = 0;
     
 
     //@IBOutlet weak var UIField: UserInputViewController!
@@ -249,20 +250,20 @@ extension RootViewController : NSTableViewDelegate {
             switch(row)
             {
             case 10:
-                text = "0x" + "A" + "0";
+                text = String(offSet)  + "x" + "A" + "0";
             case 11:
-                text = "0x" + "B" + "0";
+                text = String(offSet) + "x" + "B" + "0";
             case 12:
-                text = "0x" + "C" + "0";
+                text = String(offSet) + "x" + "C" + "0";
             case 13:
-                text = "0x" + "D" + "0";
+                text = String(offSet) + "x" + "D" + "0";
             case 14:
-                text = "0x" + "E" + "0";
+                text = String(offSet) + "x" + "E" + "0";
             case 15:
-                text = "0x" + "F" + "0";
+                text = String(offSet) + "x" + "F" + "0";
 
             default:
-                text = "0x" + String(row) + "0";
+                text = String(offSet) + "x" + String(row) + "0";
                 
             }
             
